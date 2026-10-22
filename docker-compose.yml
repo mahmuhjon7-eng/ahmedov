@@ -1,0 +1,40 @@
+# Bitta buyruq bilan HTTPS'li joylash:  DOMAIN=sizning-domen.uz docker compose up -d --build
+# (DNS A yozuvi serveringiz IP manziliga qaratilgan bo'lishi va 80/443 portlari ochiq bo'lishi kerak)
+services:
+  app:
+    build: .
+    restart: unless-stopped
+    env_file: .env
+    environment:
+      NODE_ENV: production
+      TRUST_PROXY: "1"
+    volumes:
+      - data:/data
+    expose:
+      - "3000"
+    healthcheck:
+      test: ["CMD", "wget", "-qO-", "http://127.0.0.1:3000/api/health"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+    logging:
+      driver: json-file
+      options: { max-size: "10m", max-file: "5" }
+  caddy:
+    image: caddy:2
+    restart: unless-stopped
+    ports:
+      - "80:80"
+      - "443:443"
+    environment:
+      DOMAIN: ${DOMAIN:?DOMAIN o'zgaruvchisini bering, masalan DOMAIN=synaptox.uz}
+    volumes:
+      - ./Caddyfile:/etc/caddy/Caddyfile:ro
+      - caddy_data:/data
+      - caddy_config:/config
+    depends_on:
+      - app
+volumes:
+  data:
+  caddy_data:
+  caddy_config:

@@ -1,0 +1,47 @@
+{
+  "name": "synaptox",
+  "version": "2.0.0",
+  "private": true,
+  "description": "SYNAPTOX — web + PWA ilova + Telegram bot: o'z bazasi, shifrlangan chat, fayl tahlili, video montaj, to'lov",
+  "type": "module",
+  "main": "desktop/main.cjs",
+  "engines": {
+    "node": ">=22.5.0"
+  },
+  "scripts": {
+    "start": "node --experimental-sqlite --disable-warning=ExperimentalWarning server.js",
+    "dev": "node --experimental-sqlite --disable-warning=ExperimentalWarning --watch server.js",
+    "test": "node --experimental-sqlite --disable-warning=ExperimentalWarning --test tests/*.test.js",
+    "check": "node --check server.js && node --check public/app.js && node --check public/sw.js && node --check public/i18n.js && node --check public/voice.js && node --check desktop/main.cjs && node --check desktop/preload.cjs && node --check desktop/setup.js && node --check lib/languages.js && node --check lib/config.js && node --check lib/ai.js && node --check lib/chat.js && node --check lib/brain.js && node --check lib/auth.js && node --check lib/maintenance.js && node --check lib/prefs.js && node --check lib/media.js && node --check lib/billing.js && node --check lib/http.js && node --check lib/crypto.js && node --check lib/telegram.js && node --check lib/bus.js && node --check lib/files.js && node --check lib/db.js",
+    "desktop": "electron .",
+    "desktop:dist": "electron-builder --win nsis",
+    "backup": "node --experimental-sqlite --disable-warning=ExperimentalWarning scripts/backup.js",
+    "icons": "python3 scripts/make-icons.py"
+  },
+  "build": {
+    "appId": "uz.synaptox.desktop",
+    "productName": "SYNAPTOX",
+    "directories": {
+      "output": "dist/desktop"
+    },
+    "files": [
+      "desktop/**/*",
+      "package.json"
+    ],
+    "win": {
+      "target": [
+        "nsis"
+      ]
+    },
+    "nsis": {
+      "oneClick": false,
+      "allowToChangeInstallationDirectory": true,
+      "createDesktopShortcut": true,
+      "createStartMenuShortcut": true
+    }
+  },
+  "devDependencies": {
+    "electron": "^45.0.0",
+    "electron-builder": "^26.15.3"
+  }
+}

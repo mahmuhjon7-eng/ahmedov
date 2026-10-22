@@ -1,0 +1,15 @@
+{$DOMAIN} {
+	encode gzip zstd
+	request_body {
+		max_size 110MB
+	}
+	header {
+		-Server
+	}
+	reverse_proxy app:3000 {
+		flush_interval -1
+		transport http {
+			response_header_timeout 300s
+		}
+	}
+}
